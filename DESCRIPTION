@@ -12,3 +12,12 @@ LazyData: true
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+RoxygenNote: 7.3.2
+Imports: 
+    dplyr,
+    jsonlite,
+    lubridate,
+    magrittr,
+    purrr,
+    readr,
+    sf

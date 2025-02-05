@@ -1,0 +1,11 @@
+bibentry(
+  bibtype  = "Software Package",
+  title    = "rsealevel",
+  author   = "Willem Stolte",
+  institution  = "Deltares",
+  year     = 2024,
+  volume   = ,
+  number   = ,
+  pages    = ,
+  doi      = "https://github.com/openearth/rsealevel"
+)
