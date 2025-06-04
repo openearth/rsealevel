@@ -1,5 +1,28 @@
 
 
+
+
+#' get_psmsl_station_table
+#' @param url url of psmsl station table page. Default is https://psmsl.org/data/obtaining/index.php
+#' @returns dataframe with station information including lat and lon. The information is scraped from the web page. 
+#' @export
+#' @import rvest
+#' @import rlist
+#'
+#' @examples
+#' stationinfo <- get_psmsl_station_table()
+
+get_psmsl_station_table <- function(url = "https://psmsl.org/data/obtaining/index.php") {
+  
+  df <- url %>% 
+    rvest::read_html() %>% 
+    rvest::html_nodes("table") %>% 
+    rvest::html_table(fill = T) %>%
+    rlist::list.rbind()
+  
+}
+
+
 #' read_yearly_psmsl_csv
 #'
 #' @param station_nr psmsl station number
@@ -10,7 +33,7 @@
 #' @export
 #'
 #' @examples
-#' read_yearly_psmsl_csv(c(20, 22, 23, 24, 25, 32)) %>% View
+#' read_yearly_psmsl_csv(c(20, 22, 23, 24, 25, 32))
 read_yearly_psmsl_csv  <- function(station_nr){
   
   base_rlr_url = "https://psmsl.org/data/obtaining/rlr.annual.data/"
@@ -37,7 +60,7 @@ read_yearly_psmsl_csv  <- function(station_nr){
 
 #' read_monthly_psmsl_csv
 #'
-#' @param station_nr 
+#' @param station_nr psmsl station number
 #'
 #' @returns dataframe containing sea level data for the requested station
 #' @import readr
@@ -45,7 +68,7 @@ read_yearly_psmsl_csv  <- function(station_nr){
 #' @export
 #'
 #' @examples
-#' read_monthly_psmsl_csv(c(20, 22, 23, 24, 25, 32)) %>% View
+#' read_monthly_psmsl_csv(c(20, 22, 23, 24, 25, 32))
 read_monthly_psmsl_csv  <- function(station_nr){
   
   base_rlr_url = "https://psmsl.org/data/obtaining/rlr.monthly.data/"
@@ -83,10 +106,10 @@ read_monthly_psmsl_csv  <- function(station_nr){
 #'
 #' @examples
 #'  read_monthly_psmsl_csv(c(20, 22, 23, 24, 25, 32)) %>% 
-#'  add_station_info() %>% View()
-add_station_info <- function(df, path){
+#'  add_station_info()
+add_station_info <- function(df, path = ""){
 
-mainStationInfo <- readMainStationInfo(filepath) |>
+mainStationInfo <- readMainStationInfo(path) |>
   dplyr::select(psmsl_id, name, `nap-rlr`, gtsm_id)
 
 df <- df %>% dplyr::left_join(mainStationInfo, by = c(psmsl_id = "psmsl_id"))

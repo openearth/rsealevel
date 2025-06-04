@@ -1,9 +1,9 @@
 Package: rsealevel
 Type: Package
-Title: What the Package Does (Title Case)
+Title: The package provides helper functions used in the Dutch Sea Level Monitor procedures. it is made to work with specific data, but also more global datasets such as from the Permanent Service for Mean Sea Level (PSMSL). 
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
+Author: Willem Stolte
+Maintainer: Willem Stolte <willem.stolte@deltares.nl>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
 License: What license is it under?
@@ -11,6 +11,8 @@ Encoding: UTF-8
 LazyData: true
 Suggests: 
     testthat (>= 3.0.0)
+Depends:
+    magrittr
 Config/testthat/edition: 3
 RoxygenNote: 7.3.2
 Imports: 
