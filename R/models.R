@@ -157,7 +157,7 @@ broken_linear_model <- function(df){
 #'      equation = map(model, function(x) equatiomatic::extract_eq(x, ital_vars = TRUE))
 #'    )
 #'  
-broken_squared_model <- function(df){
+broken_squared_model <- function(df, epoch){
   
   if(use_gtsm()){
     lm(

@@ -4,27 +4,29 @@ test_that("broken squared model works", {
     {
       data("dutch_sea_level")
       epoch = 1970
-      
+
       byStation <- dutch_sea_level %>%
         addBreakPoints() %>%
         dplyr::group_by(station) %>%
         tidyr::nest() %>%
         dplyr::ungroup()
-      
+
       selectedmodel <- "broken_squared"
-      
+
       byStation %>%
         tidyr::expand_grid(modeltype = selectedmodel) %>%
         dplyr::mutate(modelfunctionname = paste(modeltype, "model", sep = "_")) %>%
         # add functions for model calculation
         dplyr::mutate(modelfunctions = purrr::map(modelfunctionname, get)) %>%
+        mutate(epoch = epoch) %>%
         # add models based on data and functions
         dplyr::mutate(model = purrr::pmap(
           list(
             data,
-            modelfunctions
+            modelfunctions,
+            epoch
           ),
-          \(.d, .f) .f(.d)
+          \(.d, .f, .e) .f(.d, .e)
         )) %>%
         mutate(
           glance = map(model, broom::glance),
@@ -37,7 +39,8 @@ test_that("broken squared model works", {
         summarize(sum = sum(rsq)) %>%
         unlist() %>%
         unname()
-    }, 
-    7.12831
+    },
+      # 7.12831,
+    7.12831027
   )
 })
