@@ -1,5 +1,5 @@
 test_that("DDL metadata service works", {
-  requier
+  require(rwsapi)
     expect_s3_class(
       get_selected_metadata(
         compartiment = "OW", 
