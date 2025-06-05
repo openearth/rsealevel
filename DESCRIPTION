@@ -22,4 +22,5 @@ Imports:
     magrittr,
     purrr,
     readr,
+    tidyr,
     sf

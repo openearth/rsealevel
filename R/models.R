@@ -29,7 +29,7 @@ check_workflow_wind <- function(wind_or_surge_type){
 #' @export
 #'
 #' @examples
-linear_model <- function(df){
+linear_model <- function(df, epoch){
   if(use_gtsm()){
     lm(
       height ~ offset(surge_anomaly) + 
@@ -91,7 +91,7 @@ linear_model <- function(df){
 #'      equation = map(model, function(x) equatiomatic::extract_eq(x, ital_vars = TRUE))
 #'    )
 #'  
-broken_linear_model <- function(df){
+broken_linear_model <- function(df, epoch){
   
   if(use_gtsm()){
     lm(
@@ -118,7 +118,7 @@ broken_linear_model <- function(df){
 #' broken_squared_model
 #'
 #' @param df dataframe containing sea level data.
-#'
+#' @param epoch epoch (year) of the regression 
 #' @returns Model (lm) object 
 #' @export
 #'
@@ -190,7 +190,7 @@ broken_squared_model <- function(df, epoch){
 #' @export
 #'
 #' @examples
-broken_jerk_model <- function(df){
+broken_jerk_model <- function(df, epoch){
   # experimental 
   if(use_gtsm()){
     lm(

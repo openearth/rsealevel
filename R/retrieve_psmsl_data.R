@@ -26,7 +26,6 @@ get_psmsl_station_table <- function(url = "https://psmsl.org/data/obtaining/inde
 #' read_yearly_psmsl_csv
 #'
 #' @param station_nr psmsl station number
-#'
 #' @returns dataframe containing sea level data for the requested station
 #' @import readr
 #' @import dplyr
@@ -61,7 +60,6 @@ read_yearly_psmsl_csv  <- function(station_nr){
 #' read_monthly_psmsl_csv
 #'
 #' @param station_nr psmsl station number
-#'
 #' @returns dataframe containing sea level data for the requested station
 #' @import readr
 #' @import dplyr

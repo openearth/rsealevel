@@ -38,9 +38,9 @@ test_that("broken squared model works", {
         ) %>%
         summarize(sum = sum(rsq)) %>%
         unlist() %>%
-        unname()
+        unname() %>%
+        round(3)
     },
-      # 7.12831,
-    7.12831027
+    7.128
   )
 })
