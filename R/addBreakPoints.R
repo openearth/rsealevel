@@ -19,15 +19,19 @@
 addBreakPoints = function(df, broken_line_breakpoint = 1993, broken_squared_breakpoint = 1960){
   
   stopifnot(
+    any(names(df)=="year"),
     is.data.frame(df), 
-    broken_line_breakpoint > 1900, 
-    broken_squared_breakpoint > 1900,
-    broken_line_breakpoint < 2025, 
-    broken_squared_breakpoint < 2025
+    broken_line_breakpoint    >  1900, 
+    broken_squared_breakpoint >  1900,
+    broken_line_breakpoint     < 2000, 
+    broken_squared_breakpoint  < 2000
   )
   
+  blb_name = paste0("from", broken_line_breakpoint)
+  bsb_name = paste0("from", broken_squared_breakpoint, "_square")
+  
   df %>%
-    dplyr::mutate(from1993 = (year >= broken_line_breakpoint) * (year - broken_line_breakpoint)) %>%
-    dplyr::mutate(from1960_square = (year >= broken_squared_breakpoint) * (year - broken_squared_breakpoint) * (year - broken_squared_breakpoint))
+    dplyr::mutate(!!sym(blb_name) := (year >= broken_line_breakpoint) * (year - broken_line_breakpoint)) %>%
+    dplyr::mutate(!!sym(bsb_name) := (year >= broken_squared_breakpoint) * (year - broken_squared_breakpoint) * (year - broken_squared_breakpoint))
 
 }
