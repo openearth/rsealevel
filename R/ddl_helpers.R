@@ -65,7 +65,7 @@ get_selected_metadata = get_selected_ddl_metadata
 #' @param grootheid 
 #' @param outDir 
 #'
-#' @returns
+#' @returns Metadata for selected station and/or parameters 
 #' @export
 #'
 #' @examples
@@ -113,7 +113,7 @@ readDDLwaterhoogte <- function(station, startyear, endyear, grootheid = "Waterho
 #' @param endyear 
 #' @param outDir 
 #'
-#' @returns
+#' @returns Downloaded file on disk
 #' @export
 #'
 #' @examples
