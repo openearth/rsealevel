@@ -12,14 +12,14 @@
 #' @import httr
 #' @import jsonlite
 #' @import dplyr
+#' @import tidyr
 #' @import stringr
 #'
 #' @examples
 #' # example
-#' knmi_daily <- get_knmi_daydata_long(start = "19950101", end = "20250101", vars = c("FG:FHX:FHXH"), prefer_json = FALSE)
+#' knmi_daily <- get_knmi_daydata(start = "19950101", end = "20250101", vars = c("FG:FHX:FHXH"), prefer_json = FALSE)
 #' 
 get_knmi_daydata <- function(start, end, vars = "Q:TG", stns = "310", prefer_json = TRUE) {
-  library(httr); library(dplyr); library(stringr); library(jsonlite)
   
   url <- "https://www.daggegevens.knmi.nl/klimatologie/daggegevens"
   
@@ -88,3 +88,99 @@ get_knmi_daydata <- function(start, end, vars = "Q:TG", stns = "310", prefer_jso
 }
 
 
+
+
+
+#' read_knmi_hourly
+#' Reads files as downloaded via https://www.knmi.nl/nederland-nu/klimatologie/uurgegevens
+
+#' @param filename file name of downloaded file
+#' @param n_max number of lines to read 
+#'
+#' @returns KNMI hourly average values in memory
+#' @export
+#' @import readr
+#' @import dplyr
+#' @import lubridate
+#'
+#' @examples
+#' # example
+#' f <- system.file("extdata", "dekooy_uurgeg_wind_test.txt", package = "rsealevel")
+#' read_knmi_hourly(f)
+
+read_knmi_hourly <- function(filename, n_max = Inf) {
+  
+  lines <- readLines(filename, warn = FALSE)
+  
+  # Zoek de kolomheader
+  # header_row <- grep("^#\\s*STN,YYYYMMDD", lines)
+  header_row <- grep("^\\s*#?\\s*STN\\s*,\\s*YYYYMMDD", lines)
+  
+  if (length(header_row) == 0) {
+    stop("Kolomheader niet gevonden.")
+  }
+  
+  header <- strsplit(
+    sub("^#\\s*", "", lines[header_row]),
+    ","
+  )[[1]]
+  
+  header <- trimws(header)
+  
+  data <- readr::read_csv(
+    filename,
+    skip = header_row,
+    col_names = header,
+    na = c("", " "),
+    trim_ws = TRUE,
+    n_max = n_max,
+    show_col_types = FALSE
+  )
+  
+  data |>
+    dplyr::mutate(
+      datetime = lubridate::ymd_h(
+        sprintf("%08d %02d", YYYYMMDD, HH),
+        tz = "UTC"
+      )
+    )
+}
+
+
+# filename = "data/knmi/metingen/uurgeg_235_2021-2030.txt"
+# read_knmi_hourly(filename, n_max = Inf)
+
+#' read_knmi_hourly_long
+#' Reads files as downloaded via https://www.knmi.nl/nederland-nu/klimatologie/uurgegevens and transfers to long format
+
+#' @param filename file name of downloaded file
+#' @param n_max number of lines to read 
+#'
+#' @returns KNMI hourly average values in memory
+#' @export
+#' @import readr
+#' @import dplyr
+#' @import lubridate
+#'
+#' @examples
+#' # example
+#' f <- system.file("extdata", "dekooy_uurgeg_wind_test.txt", package = "rsealevel")
+#' read_knmi_hourly_long(f)
+read_knmi_hourly_long <- function(filename, n_max = Inf) {
+  
+  dat <- read_knmi_hourly(filename, n_max)
+  
+  vars <- setdiff(
+    names(dat),
+    c("STN", "YYYYMMDD", "HH", "datetime")
+  )
+  
+  tidyr::pivot_longer(
+    dat,
+    cols = dplyr::all_of(vars),
+    names_to = "parameter",
+    values_to = "value"
+  )
+}
+
+# read_knmi_hourly_long("datadekooy_uurgeg_wind_test.txt")

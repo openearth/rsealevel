@@ -48,8 +48,8 @@ read_yearly_psmsl_csv  <- function(station_nr){
                        delim = ";"
                      ) |>
                        dplyr::mutate(psmsl_id = as.character(x))
-                   }
-  ) |>
+                   } 
+  ) %>%
     dplyr::bind_rows()
   
   return(rlr_df)
@@ -85,33 +85,10 @@ read_monthly_psmsl_csv  <- function(station_nr){
                      ) |>
                        dplyr::mutate(psmsl_id = as.character(x))
                    }
-  ) |>
+  ) %>%
     bind_rows()
   
   return(rlr_df)
 
 }
 
-#' add_station_info
-#'
-#' @param df dataframe containing sea level data obtained from psmsl.org using read_monthly_psmsl_csv or read_yearly_psmsl_csv. As a minimum it should contain a column named "psmsl_id" referring to the station id as used in the psmsl database. 
-#' @param path path to 
-#'
-#' @returns input dataframe with extra columns "name", "nap-rlr", and "gtsm_id".
-#' @import readr
-#' @import dplyr
-#' @export
-#'
-#' @examples
-#'  read_monthly_psmsl_csv(c(20, 22, 23, 24, 25, 32)) %>% 
-#'  add_station_info()
-add_station_info <- function(df, path = ""){
-
-mainStationInfo <- readMainStationInfo(path) |>
-  dplyr::select(psmsl_id, name, `nap-rlr`, gtsm_id)
-
-df <- df %>% dplyr::left_join(mainStationInfo, by = c(psmsl_id = "psmsl_id"))
-
-return(df)
-
-}
